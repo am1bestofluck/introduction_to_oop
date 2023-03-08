@@ -19,13 +19,16 @@ public class Ware {
         this.price = (price < Ware.defaultPrice)? Ware.defaultPrice:price;
         this.measureUnit = measureUnit;
     }
+    
     public Ware(String name){
         this(name,defaultPrice,defaultQuantity,measurEnum.undefined);
 
     }
+    
     public String getMeasureUnit(){
         return this.measureUnit.toString();
     }
+    
     public void setMeasureUnit(measurEnum newMeasure){
         this.measureUnit = newMeasure;
     }
@@ -73,6 +76,7 @@ public class Ware {
     public String toString() {
         return String.format("Ware %s , price: %.2f, currently: %d %s(s).", this.name,this.price,this.quantity, this.measureUnit.name());
     }
+    
     public static void main(String[] args) {
         Ware some = new Ware("milk",2.0,20,measurEnum.liter);
         System.out.println(some);
