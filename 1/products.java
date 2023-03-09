@@ -12,19 +12,20 @@ class Milk extends Drink{
     }
     @Override
     public String toString() {
-        return super.toString();
+        return String.format("%s Bottle volume: %.2f %s (s). Fat concentration: %d %%. Valid till %s.",
+         super.toString(), volume, measureUnit.name(), fat, validTill.toString() );
     }
 }
 
-class Limonade extends Drink{
+class Lemonade extends Drink{
 
-    public Limonade(String name, Double price, Integer quantity, measurEnum measureUnit, double volume){
+    public Lemonade(String name, Double price, Integer quantity, measurEnum measureUnit, double volume){
         super(name, price, quantity, measureUnit, volume);
         
     }
     @Override
     public String toString() {
-        return super.toString();}
+        return String.format("%s Comes in bottles of %.2f %s.", super.toString(), volume, measureUnit.name());}
 }
 
 class Bread extends Food{
@@ -46,11 +47,20 @@ class Egg extends Food{
         super(name, price, quantity, measureUnit,validTill);
         this.PerPack = PerPack;
     }
+    @Override
+    public String toString() {
+        return String.format("%s , %d in a pack, valid till %s.", super.toString(),PerPack,validTill.toString());
+    }
 }
 
 class Masks extends Higienic{
     public Masks (String name, Double price, Integer quantity, measurEnum measureUnit, Integer PerPack){
         super(name, price, quantity, measureUnit, PerPack);
+    }
+    @Override
+    public String toString() {
+
+        return String.format("%s In packs of %d.", super.toString(),PerPack);
     }
 
 }
