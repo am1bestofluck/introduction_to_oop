@@ -76,24 +76,23 @@ public class Ware {
     public String toString() {
         return String.format("Ware %s , price: %.2f, currently: %d %s(s).", this.name,this.price,this.quantity, this.measureUnit.name());
     }
-    
-    public static void main(String[] args) {
-        Ware some = new Ware("milk",2.0,20,measurEnum.liter);
-        System.out.println(some);
-        some.Rename("coffee");
-        System.out.println(some.getName());
-        System.out.println(some.getPrice());
-        some.setPrice(-5.0);
-        System.out.println(some.getPrice());
-        some.changeQuantity(50);
-        System.out.println(some.getQuantity());
-        some.changeQuantity(-500);
-        System.out.println(some.getQuantity());
-        System.out.println(some);
-        Ware other= new Ware("banana");
-        other.setMeasureUnit(measurEnum.kilo);
-        other.changeQuantity(20);
-        other.setPrice(35.6);
-        System.out.println(other);
-    }
+    // public static void main(String[] args) {
+        // Ware some = new Ware("milk",2.0,20,measurEnum.liter);
+        // System.out.println(some);
+        // some.Rename("coffee");
+        // System.out.println(some.getName());
+        // System.out.println(some.getPrice());
+        // some.setPrice(-5.0);
+        // System.out.println(some.getPrice());
+        // some.changeQuantity(50);
+        // System.out.println(some.getQuantity());
+        // some.changeQuantity(-500);
+        // System.out.println(some.getQuantity());
+        // System.out.println(some);
+        // Ware other= new Ware("banana");
+        // other.setMeasureUnit(measurEnum.kilo);
+        // other.changeQuantity(20);
+        // other.setPrice(35.6);
+        // System.out.println(other);
+    // }
     }

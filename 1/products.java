@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-final class Milk extends Drink{
+class Milk extends Drink{
     Integer fat;
     LocalDate validTill;
 
@@ -10,16 +10,24 @@ final class Milk extends Drink{
         this.fat = fat;
         this.validTill = validTill;
     }
-}
-
-final class Limonade extends Drink{
-
-    public Limonade(String name, Double price, Integer quantity, measurEnum measureUnit, double volume){
-        super(name, price, quantity, measureUnit, volume);
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }
 
-final class Bread extends Food{
+class Limonade extends Drink{
+
+    public Limonade(String name, Double price, Integer quantity, measurEnum measureUnit, double volume){
+        super(name, price, quantity, measureUnit, volume);
+        
+    }
+    @Override
+    public String toString() {
+        return super.toString();}
+}
+
+class Bread extends Food{
     flour ingridFlour;
     enum flour{
         first,second,top_grade
@@ -31,7 +39,7 @@ public Bread (String name, Double price, Integer quantity, measurEnum measureUni
     }
     
 }
-final class Egg extends Food{
+class Egg extends Food{
     Integer PerPack;
     public Egg (String name, Double price, Integer quantity, measurEnum measureUnit, 
     LocalDate validTill, Integer PerPack){
@@ -40,13 +48,13 @@ final class Egg extends Food{
     }
 }
 
-final class Masks extends Higienic{
+class Masks extends Higienic{
     public Masks (String name, Double price, Integer quantity, measurEnum measureUnit, Integer PerPack){
         super(name, price, quantity, measureUnit, PerPack);
     }
 
 }
-final class HigienicPaper extends Higienic{
+class HigienicPaper extends Higienic{
     Integer layers;
     
     public HigienicPaper (String name, Double price, Integer quantity, measurEnum measureUnit, Integer PerPack, Integer layers){
@@ -55,19 +63,27 @@ final class HigienicPaper extends Higienic{
     }
 }
 
-final class Diaper extends ChildFocused{
+class Diaper extends ChildFocused{
     Integer size;
     Integer minWeight;
     Integer maxWeight;
+    typeD typeOf;
+    public static enum typeD{
+        singleUse, reUsable
+    }
 
-    public Diapear( String name, Double price, Integer quantity, 
-    measurEnum measureUnit, Boolean hypoallergenic, Integer legalAge, Integer size,
-    Integer minWeight, Integer maxWeight){
-        super(name, price,quantity,measureUnit, hypoallergenic, legalAge);
+    public Diaper( String name, Double price, Integer quantity, measurEnum measureUnit, Boolean hypoallergenic, Integer legalAge, Integer size, Integer minWeight, Integer maxWeight, typeD typeOfDiapear){
+        super(name,price,quantity,measureUnit, hypoallergenic, legalAge);
         this.size = size;
         this.minWeight = minWeight;
         this.maxWeight = maxWeight;
+        this.typeOf = typeOfDiapear;
 
 
+    }
+}
+class Pacifier extends ChildFocused{
+    public Pacifier( String name, Double price, Integer quantity, measurEnum measureUnit, Boolean hypoallergenic, Integer legalAge){
+        super(name,price,quantity,measureUnit, hypoallergenic, legalAge);
     }
 }
