@@ -9,7 +9,7 @@ public class Ware {
     protected static final Integer defaultQuantity = 0;
     protected static final Double defaultPrice = 0.0;
     protected static enum measurEnum{
-        unit,liter,kilo, pack, undefined
+        unit,liter,kilo, pack, undefined,Bottle
     }
 
     public Ware(String name, Double price, Integer quantity, Ware.measurEnum measureUnit ){

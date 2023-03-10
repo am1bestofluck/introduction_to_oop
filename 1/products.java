@@ -12,8 +12,8 @@ class Milk extends Drink{
     }
     @Override
     public String toString() {
-        return String.format("%s Bottle volume: %.2f %s (s). Fat concentration: %d %%. Valid till %s.",
-         super.toString(), volume, measureUnit.name(), fat, validTill.toString() );
+        return String.format("%s Fat concentration: %d %%. Valid till %s.",
+         super.toString(), fat, validTill.toString() );
     }
 }
 
@@ -25,7 +25,7 @@ class Lemonade extends Drink{
     }
     @Override
     public String toString() {
-        return String.format("%s Comes in bottles of %.2f %s.", super.toString(), volume, measureUnit.name());}
+        return String.format("%s", super.toString());}
 }
 
 class Bread extends Food{
@@ -38,8 +38,12 @@ public Bread (String name, Double price, Integer quantity, measurEnum measureUni
         super(name, price, quantity, measureUnit,validTill);
         this.ingridFlour = ingrid_flour;
     }
-    
+    @Override
+    public String toString() {
+        return String.format("%s Flour sort: %s.",super.toString(),this.ingridFlour.name());
+    }
 }
+
 class Egg extends Food{
     Integer PerPack;
     public Egg (String name, Double price, Integer quantity, measurEnum measureUnit, 
@@ -49,7 +53,7 @@ class Egg extends Food{
     }
     @Override
     public String toString() {
-        return String.format("%s , %d in a pack, valid till %s.", super.toString(),PerPack,validTill.toString());
+        return String.format("%s %d in a pack.", super.toString(),PerPack);
     }
 }
 
@@ -60,7 +64,7 @@ class Masks extends Higienic{
     @Override
     public String toString() {
 
-        return String.format("%s In packs of %d.", super.toString(),PerPack);
+        return String.format("%s", super.toString());
     }
 
 }
@@ -70,6 +74,10 @@ class HigienicPaper extends Higienic{
     public HigienicPaper (String name, Double price, Integer quantity, measurEnum measureUnit, Integer PerPack, Integer layers){
         super(name, price, quantity, measureUnit, PerPack);
         this.layers = layers;
+    }
+    @Override
+    public String toString() {
+        return String.format("%s %d layer(s).", super.toString(), layers);
     }
 }
 
@@ -89,7 +97,11 @@ class Diaper extends ChildFocused{
         this.maxWeight = maxWeight;
         this.typeOf = typeOfDiapear;
 
-
+    }
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return String.format("%s Size %d. %s.Child weight between %d and %d. ", super.toString(), this.size, this.typeOf.name(),this.minWeight , this.maxWeight );
     }
 }
 class Pacifier extends ChildFocused{
