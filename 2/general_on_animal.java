@@ -15,4 +15,7 @@ public class general_on_animal {
         this.dossier.put("feedback",whatTells);
 
     }
+    public Hashtable<String,Object> getValues(){
+        return this.dossier;
+    }
 }
