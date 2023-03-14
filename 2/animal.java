@@ -1,27 +1,25 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 interface animal{
 
     public Integer getHeight();
-    private static void setHeight(Integer value){};
 
     public Integer getWeight();
-    private static void setWeight(Integer value){};
 
     public String getEyeColor();
-    private void setEyeColor(String value){};
 
-    public static String[] getGeneral(){
-        return new String[100];
-    };
+    public ArrayList<String> getGeneral();
     private static void setGeneral(Hashtable<String,Object> WishItBeWiser){};
 
-    public String[] getSpecifics();
+    public ArrayList<String> getSpecifics();
     private void setSpecifics(Hashtable <String,String> args){};
 
     public String SayYourThing();
-    private static void WhatDoesItSay(String call_){};
+    private void WhatDoesItSay(String call_){};
+
+    public void getInfo();
 
 }
 
@@ -56,3 +54,15 @@ interface wild extends animal{
     private void setFirstContactDate(){};
 
 }
+
+interface basic_bird {
+
+    public Integer getFlightLevel();
+    private void setFlightLevel(){};
+
+    public String iFly();
+}
+
+interface domestic_bird extends domestic, basic_bird{}
+
+interface wild_bird extends wild,basic_bird{}
