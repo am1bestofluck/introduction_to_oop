@@ -3,11 +3,11 @@ import java.util.Hashtable;
 /**
  * general
  */
-public class general_on_animal {
+public class general_on_animal_inputClass {
 
     private Hashtable<String,Object> dossier= new Hashtable<>();
 
-    public general_on_animal(String whereLives,Integer howLongLives, String whatEats,
+    public general_on_animal_inputClass(String whereLives,Integer howLongLives, String whatEats,
     String whatTells){
         this.dossier.put("habitant",whereLives);
         this.dossier.put("expectedAge", howLongLives);

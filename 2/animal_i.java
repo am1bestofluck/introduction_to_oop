@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-interface animal{
+interface animal_i{
 
     public Integer getHeight();
 
@@ -23,7 +23,7 @@ interface animal{
 
 }
 
-interface domestic extends animal{
+interface domestic_i extends animal_i{
 
 
     public String getName();
@@ -45,7 +45,7 @@ interface domestic extends animal{
 
 }
 
-interface wild extends animal{
+interface wild_i extends animal_i{
 
     public String getInhabitedZone();
     private void setInhabitedZone(){};
@@ -55,14 +55,10 @@ interface wild extends animal{
 
 }
 
-interface basic_bird {
+interface bird_i {
 
     public Integer getFlightLevel();
     private void setFlightLevel(){};
 
     public String iFly();
 }
-
-interface domestic_bird extends domestic, basic_bird{}
-
-interface wild_bird extends wild,basic_bird{}
