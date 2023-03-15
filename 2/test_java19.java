@@ -1,5 +1,5 @@
 /**
- * test_java19
+ * микроменедждмент среды
  */
 public class test_java19 {
 

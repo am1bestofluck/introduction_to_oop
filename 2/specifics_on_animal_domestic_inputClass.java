@@ -1,6 +1,9 @@
 import java.time.LocalDate;
 import java.util.Hashtable;
 
+//*
+//  Входящие данные в виде классов
+//*/
 abstract class specifics_on_animal{
     protected Hashtable<String,Object> output = new Hashtable<>();
 

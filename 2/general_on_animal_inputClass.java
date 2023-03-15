@@ -1,7 +1,7 @@
 import java.util.Hashtable;
 
 /**
- * general
+ * входящие данные в виде классов, а не отдельных полей
  */
 public class general_on_animal_inputClass {
 
