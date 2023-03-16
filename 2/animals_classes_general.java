@@ -194,13 +194,18 @@ abstract class bird extends animals_general implements bird_i{
 
     @Override
     public ArrayList<String> getGeneral() {
-        
+        Integer aviaryHeight = 5;
+        String border = (this.getFlightLevel() <= aviaryHeight)
+            ?""
+            :String.format(
+                "Not here though, aviary's height is %d meters straight.",
+                aviaryHeight);
         ArrayList<String> out = new ArrayList<>();
         out.add(String.format("This bird's breed is called %s.", super.general_info.get("breed")));
         out.add(String.format("%s's usually go \"%s\".",
         super.general_info.get("breed"), super.SayYourThing()));
-        out.add(String.format("%s can fly at around %d meters. Not here though, aviary's height is 5 meters straight.",
-        super.general_info.get("breed"),this.getFlightLevel()));
+        out.add(String.format("%s can fly at around %d meters. %s",
+        super.general_info.get("breed"),this.getFlightLevel(),border));
         return out;
     }
 
@@ -239,7 +244,7 @@ abstract class bird extends animals_general implements bird_i{
     }
     @Override
     public void getInfo(){
-        System.out.println(String.format("Shared data on %s:", super.general_info.get("breed")));
+        System.out.println(String.format("\nShared data on %s:", super.general_info.get("breed")));
         for (String string : this.getGeneral()) {
             System.out.println(string);
         }
@@ -249,33 +254,4 @@ abstract class bird extends animals_general implements bird_i{
     }
 
 }
-}
-
-class Parrot extends bird{
-    public Parrot(general_on_bird info){
-        super(info);
-    }
-}
-
-
-
-public class animals_classes_general {
-
-    public static void main(String[] args) {
-        general_on_animal_inputClass onPuma_g = new general_on_animal_inputClass("Africa", 18, "slow mammals", "turn back.");
-        specifics_on_animal_wild onPuma_s = new specifics_on_animal_wild("Black Puma", "brown", "gruuu", LocalDate.of(2020,3,1), 80, 96);
-        WildAnimal puma = new WildAnimal(onPuma_g, onPuma_s);
-        puma.getInfo();
-        System.out.println("#");
-        general_on_animal_inputClass onCatBarsik_g = new general_on_animal_inputClass("around humans", 15, "catfood", "meow");
-        specifics_on_animal_domestic_inputClass onCatBarsic_s = new specifics_on_animal_domestic_inputClass("Barsik", "Irish Drunkard", "grey", "white", "oh long johnson", LocalDate.of(2019,3,3), true, 23, 7);
-        DomesticAnimal catBarsic = new DomesticAnimal(onCatBarsik_g, onCatBarsic_s);
-        catBarsic.getInfo();
-        System.out.println("#");
-        general_on_bird onParrot = new general_on_bird("Cacadoo", "blue", "LalaLa", 50, 50, 2);
-        Parrot dreadnought = new Parrot(onParrot);
-        dreadnought.getInfo();
-        System.out.println(dreadnought.iFly());
-
-    }
 }
