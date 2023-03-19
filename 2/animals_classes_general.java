@@ -14,6 +14,10 @@ abstract class animals_general  implements animal_i{
     // сначала сделал два класса потом вспомнил что они должны быть
     // под общим знаминателем :( :)
 
+    public String getBreed(){
+        return (String)this.general_info.get("breed");
+    }
+
     public Integer getHeight(){
         return (Integer)this.specifics.get("height");
     }

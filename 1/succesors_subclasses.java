@@ -21,7 +21,6 @@ class Drink extends Ware{
     }
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return String.format("%s %s volume is %.2f.", super.toString(),super.measureUnit.name(),this.volume);
     }
 }
@@ -47,7 +46,6 @@ class ChildFocused extends Ware{
     }
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return String.format("%s, %s allergy.Valid age %d+.", 
         super.toString(), tmp  = (hypoallergenic)? "Doesn't cause":"Causes", this.legalAge);
     }
