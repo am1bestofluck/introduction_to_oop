@@ -100,7 +100,6 @@ class Diaper extends ChildFocused{
     }
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return String.format("%s Size %d. %s.Child weight between %d and %d. ", super.toString(), this.size, this.typeOf.name(),this.minWeight , this.maxWeight );
     }
 }
