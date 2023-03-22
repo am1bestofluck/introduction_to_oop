@@ -131,6 +131,47 @@ public class Zoo {
      
         general_on_bird onParrot = new general_on_bird("Cacadoo", "blue", "LalaLa", 50, 50, 2);
         Parrot dreadnought = new Parrot(onParrot);
+        // cat
+        general_on_animal_inputClass onBarsik_c= new general_on_animal_inputClass(
+            "at home", 7, "cat food", "meow");
+        specifics_on_animal_domestic_inputClass onBarsic_s = 
+            new specifics_on_animal_domestic_inputClass("Barsik"
+            , "polar grey", "green", "grey", "nyai", 
+            LocalDate.of(2022,1,1), true, 23, 3);
+        Cat Barsik = new Cat(onBarsik_c, onBarsic_s, true);
+        // Barsik.askAttention();
+        // Barsik.getInfo();
+        // Tiger
+        general_on_animal_inputClass onTiger_c= new general_on_animal_inputClass(
+            "Africa", 20, "slow and weak animals", "leave.");
+        specifics_on_animal_wild onTiger_s = 
+            new specifics_on_animal_wild(
+                "bengal", "pretty!", "gimmeFood!", LocalDate.of(2000,2,2), 80, 90);
+        Tiger Jorik = new Tiger(onTiger_c, onTiger_s);
+        
+        
+        general_on_animal_inputClass onDog_c = new general_on_animal_inputClass("around here", 13, "cats", "bark");
+        specifics_on_animal_domestic_inputClass onDog_s = new specifics_on_animal_domestic_inputClass(
+                "Richi", "haskee", "blue and green", "pinkey grey",
+                "ohnonnon", LocalDate.of(2003,3,3), false, 50, 8);
+        Dog Richi = new Dog(onDog_c, onDog_s, true);
+        Dog Archi = new Dog(onDog_c, onDog_s, false);
+
+        general_on_animal_inputClass onWolf_c= new general_on_animal_inputClass("forests", 16, "tigers", "graw");
+        specifics_on_animal_wild onWolf_s = new specifics_on_animal_wild("arctic wolf", "blue", "rgh", LocalDate.of(2003,2,2), 5, 5);
+        Wolf Nyamka = new Wolf(onWolf_c, onWolf_s, true);
+        Nyamka.getInfo();
+        // Chicken
+        general_on_bird onChicken = new general_on_bird("Polish Chicken", "brown", "okkoko", 2, 30, 2);
+        Chicken Kurka = new Chicken(onChicken);
+        Kurka.getInfo();
+        System.out.println(Kurka.iFly());
+        //Stork
+        general_on_bird onStork = new general_on_bird("Pretty Stork", "blue", "tic-tac", 50, 120, 7);
+        Chicken Stork_bird = new Chicken(onStork);
+        Stork_bird.getInfo();
+        System.out.println(Stork_bird.iFly());
+    
        
     
         Zoo zoo1 = new Zoo();

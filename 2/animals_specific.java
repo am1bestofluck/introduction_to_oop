@@ -111,6 +111,11 @@ class Stork extends bird {//аист
 }
 }
 
+class Parrot extends bird{
+    public Parrot(general_on_bird info){
+        super(info);
+    }
+}
 class Test{
     public static void main(String[] args) {
         // cat
