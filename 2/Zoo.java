@@ -101,6 +101,34 @@ public class Zoo {
             animal.getInfo();
         }
     }
+    public void Meeting(){
+        ArrayList<Integer> sample = new ArrayList<>();
+        for (int i = 0; i < this.content.length; i++) {
+            sample.add(i);    
+        }
+        Collections.shuffle(sample);
+        for (Integer integer : sample) {
+            this.standAndSing(integer);
+            this.trick(integer);
+            
+        }
+    
+    }
+    public void trick(int index){
+        Object pet = this.content[index];
+        if (pet instanceof Dog){
+            Dog temp = (Dog) pet;
+            temp.specialAction();
+        }
+        else if (pet instanceof bird){
+            bird temp = (bird) pet;
+            temp.specialAction();
+        }
+        else if (pet instanceof DomesticAnimal){
+            DomesticAnimal temp = (DomesticAnimal) pet;
+            temp.specialAction();
+        }
+    }
 
     public void allSing(){
         ArrayList<Integer> sample = new ArrayList<>();

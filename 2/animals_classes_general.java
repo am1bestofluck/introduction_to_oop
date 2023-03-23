@@ -35,6 +35,9 @@ abstract class animals_general  implements animal_i{
     public void getInfo(){
         System.out.println("Called through childs");
     }
+    public void specialAction(){
+        return;
+    }
 }
 
 class DomesticAnimal extends animals_general implements domestic_i{
@@ -120,6 +123,11 @@ class DomesticAnimal extends animals_general implements domestic_i{
         
         }
         System.out.println(this.SayYourThing());
+        this.askAttention();
+    }
+    @Override
+    public void specialAction() {
+        super.specialAction();
         this.askAttention();
     }
 }
@@ -257,5 +265,10 @@ abstract class bird extends animals_general implements bird_i{
             System.out.println(string);
     }
 
-}
+    }
+@Override
+public void specialAction() {
+    super.specialAction();
+    System.out.println(this.iFly());
+    }
 }

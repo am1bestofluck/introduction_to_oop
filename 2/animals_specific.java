@@ -68,6 +68,11 @@ class Dog extends DomesticAnimal{
         tmp.add(String.format("%s is%s trained",super.getName(),temp));
         return tmp;
     }
+    @Override
+    public void specialAction() {
+        super.specialAction();
+        this.TrainMore();
+    }
 }
 
 class Wolf extends WildAnimal{
