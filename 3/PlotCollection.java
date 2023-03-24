@@ -1,0 +1,7 @@
+/**
+ * PlotCollection
+ */
+public class PlotCollection {
+
+    
+}
