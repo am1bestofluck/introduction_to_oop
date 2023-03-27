@@ -19,15 +19,15 @@ public class PlotCollection {
     "'triangle' accepts all three sides.",
     "'circle' accepts radius.");
     private Pattern getFigure = Pattern.compile(
-            "^\\(square|rectangle|triange|circle)\\", 
+            "^\\(square|rectangle|triange|circle\\)", 
             Pattern.CASE_INSENSITIVE);
     private Pattern evalCircle = Pattern.compile("\\(circle\\)\\s\\)+",
         Pattern.CASE_INSENSITIVE);
-    private Pattern evalSquare = Pattern.compile("square ",
+    private Pattern evalSquare = Pattern.compile("\\(square\\) ",
         Pattern.CASE_INSENSITIVE);
-    private Pattern evalTriange = Pattern.compile("square ",
+    private Pattern evalTriange = Pattern.compile("\\(triangle\\)",
         Pattern.CASE_INSENSITIVE);
-    private Pattern evalRectangle = Pattern.compile("rectangle ",
+    private Pattern evalRectangle = Pattern.compile("\\(rectangle\\)",
         Pattern.CASE_INSENSITIVE);
     
     public PlotCollection(){
@@ -46,7 +46,7 @@ public class PlotCollection {
                 tempString = "Wrong plot description";
                 throw new UnexpectedPlotException(tempString);
                 }
-                System.out.println("test");
+            System.out.println("test");
             Matcher tryCircle = evalCircle.matcher(tempString);
             Matcher trySquare = evalSquare.matcher(tempString);
             Matcher tryRectangle = evalRectangle.matcher( tempString);
@@ -58,20 +58,18 @@ public class PlotCollection {
         }
             
         }
-        catch (UnexpectedPlotException e ){
+        catch (UnexpectedPlotException | DescriptionFormatException w){
             System.out.println(tempString);
             System.out.println(fail);
             return;
         }
-        catch (DescriptionFormatException w){
-            System.out.println(tempString);
-            System.out.println(fail);
-            return;
+        // catch (DescriptionFormatException w){
+        //     System.out.println(tempString);
+        //     System.out.println(fail);
+        //     return;
         }
 
 
-    
-    }
     public void add(String description){
         String descriptionFail= "DescriptionError";
         String success = "Done!";
