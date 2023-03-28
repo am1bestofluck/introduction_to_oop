@@ -176,5 +176,6 @@ public class PlotCollection {
         }
         this.temp_array = new Plot[this.main_array.length-1];
     }
+    
 
     }
