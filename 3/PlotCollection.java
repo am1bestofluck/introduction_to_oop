@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +12,7 @@ public class PlotCollection {
     private Plot[] main_array;
     private Plot[] temp_array;
     private String tempString;
+    private Plot [] for_keyboard_input = new Plot[1];
     private Scanner systemin = new Scanner(System.in);
     private String input_hint = String.join("\n",
     "", "Can add 'rectange', 'square', 'circle', 'triangle'.",
@@ -39,12 +43,28 @@ public class PlotCollection {
     }
 
     public void add(){
+        
+        this.InputPlot();
+        if (this.for_keyboard_input[0] == null){
+            return;
+        }
+        
+        this.temp_array = new Plot[this.main_array.length+1];
+        for (int i = 0; i < this.main_array.length; i++) {
+            this.temp_array[i] = this.main_array[i];
+        }
+        temp_array[main_array.length] = this.for_keyboard_input[0];
+        this.main_array = this.temp_array;
+        this.temp_array = null;
+        System.out.println("Success");
+        }
+
+    private void InputPlot(){
         String fail = "Plot not added. Aborting!";
-        String success = "Done!";
+        String success = "Created new plot!";
         System.out.println(input_hint);
         String tmp = systemin.nextLine();
         Plot temPlot;
-        
         try{
             Matcher extractPlotType = getFigure.matcher(tmp);
             boolean JAVA_WHY_YOU_DO_IT = extractPlotType.find();
@@ -94,18 +114,14 @@ public class PlotCollection {
         | NegativePhysicalValueException | NumberFormatException w){
 
             System.out.println(fail);
+            this.for_keyboard_input[0] = null;
             return;
         }
-        this.temp_array = new Plot[this.main_array.length+1];
-        for (int i = 0; i < this.main_array.length; i++) {
-            this.temp_array[i] = this.main_array[i];
-        }
-        temp_array[main_array.length] = temPlot;
-        this.main_array = this.temp_array;
-        this.temp_array = null;
-        System.out.println("Success");
-        }
+        this.for_keyboard_input[0] = temPlot;
+        System.out.println(success);
 
+    }
+    
     public void add(Plot obj){
         this.temp_array = new Plot[this.main_array.length+1];
         for (int i = 0; i < this.main_array.length; i++) {
@@ -119,7 +135,8 @@ public class PlotCollection {
 
     public String inventorization(){
         StringBuilder tmp = new StringBuilder();
-        
+        String header ="\nPlots:";
+        tmp.append(header);
         for (Plot plot : this.main_array) {
             tmp.append("\n");
             if (plot instanceof Circle){
@@ -131,9 +148,15 @@ public class PlotCollection {
             else if (plot instanceof Rectangle){
                 tmp.append(((Rectangle)plot).toString());
             }
-            else {
+            else if (plot instanceof Triange) {
                 tmp.append(((Triange)plot).toString());
             }
+            else {
+                tmp.append("what are you?");
+            }
+            }
+            if (this.main_array.length == 0){
+                tmp.append("\nNothing to report.");
             }
             String out = tmp.toString();
             return out;
@@ -170,12 +193,53 @@ public class PlotCollection {
         if (this.main_array.length == 0){
             return;
         }
-        if (index <0 && index > this.main_array.length){
+        if (index < 0 || index > this.main_array.length){
             System.out.println("inadequate index");
             return;
         }
+        System.out.println(String.format(
+            "Removing %s", this.main_array[index].toString()));
         this.temp_array = new Plot[this.main_array.length-1];
+        for (int i = 0; i < index; i++) {
+            this.temp_array[i] = this.main_array[i];
+        }
+        for (int i = index; i < this.temp_array.length ; i++) {
+            this.temp_array[i] = this.main_array[i+1];
+        }
+        this.main_array = this.temp_array;
+        this.temp_array = null;
+        System.out.println("Done.");
     }
-    
 
+    public void editPlot(Integer index){
+        if (index <0 || index >= this.main_array.length){
+            System.out.println("Inadequate index");
+            return;
+        }
+        this.InputPlot();
+        if (this.for_keyboard_input == null){
+            return;
+        }
+        
+        this.main_array[index] = this.for_keyboard_input[0];
     }
+
+    public void editPlot(Integer index, Plot newPlot ){
+        if (index <0 || index >= this.main_array.length){
+            System.out.println("Inadequate index");
+            return;
+    }
+    this.main_array[index] = newPlot;
+    }
+
+    public void sortBySquare(){
+        List<Plot> tempList = new ArrayList<Plot>();
+        for (Plot plot : this.main_array) {
+            tempList.add(plot);
+        }
+        Collections.sort(tempList);
+        for (int i = 0; i < tempList.size(); i++) {
+            this.main_array[i] = tempList.get(i);
+        }
+    }
+}

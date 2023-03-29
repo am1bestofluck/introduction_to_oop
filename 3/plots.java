@@ -14,7 +14,7 @@ interface operations_i {
     public Double getArea();
 }
 
-abstract class Plot implements operations_i{
+abstract class Plot implements operations_i,Comparable{
     protected String simpleName;
     protected String publicName;
     protected Double perimeter;
@@ -65,6 +65,26 @@ abstract class Plot implements operations_i{
         return String.format("%s %s with perimeter %.2f and area %.2f.",
          this.getSimpleName(), this.getPublicName(), this.perimeter ,this.area);
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.area == ((Plot)obj).area;
+    }
+    
+    @Override
+    public int compareTo(Object o) {
+        if (this.area > ((Plot)o).area) {
+            return 1;
+        }
+        else if (this.area < ((Plot)o).area){
+            return -1;
+        }
+        else{
+        return 0;
+        }
+    }
+    
 }
 
 class Triange extends Plot{
