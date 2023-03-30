@@ -5,7 +5,7 @@ import java.util.Hashtable;
 /**
  * Program
  */
-public class Program {
+public class Program1 {
 
     public static void main(String[] args) {
         Ware milk1 = new Milk("\"Casuta mea\"",20.5,1,

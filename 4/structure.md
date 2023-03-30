@@ -1,8 +1,8 @@
 <pre>interface UnTypedCollection\<T\>{
 
-    public UnTypedCollection();
+    public UnTypedCollection(); //констукторы в интерфейс не выносим?
 
-    public UnTypedCollection(T[]);
+    public UnTypedCollection(T[]); //констукторы в интерфейс не выносим?
 
     public add(T obj);
 

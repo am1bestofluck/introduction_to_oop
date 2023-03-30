@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Random;
 
-public class Program {
+public class Program2 {
     
     public static void main(String[] args) {
         Scanner replLoop= new Scanner( System.in);
