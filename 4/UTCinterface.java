@@ -22,7 +22,7 @@ public interface UTCinterface<T>// котиков не перемножаем...
 
     public void selectionSort();
 
-    public void get( Integer index);
+    public T get( Integer index);
 
     public void edit (Integer index, T unit);
 
