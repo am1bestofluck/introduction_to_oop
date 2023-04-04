@@ -31,4 +31,6 @@ public interface UTCinterface<T>// котиков не перемножаем...
     public void getSet(Integer index);
 
     public void getSet( Integer index, T obj);
+    
+    public Integer getIndex(T obj);
 }

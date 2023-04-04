@@ -4,12 +4,18 @@ public class UTcollection <T extends Number & Comparable<? super T>>
 implements UTCinterface<T>
  {
     ArrayList<T> body;
+    int len;
+    private void refreshLenWHY(){
+        this.len = this.body.size();
+    }
     // T[] body;
     // вот и поговорили: https://stackoverflow.com/questions/2927391/whats-the-reason-i-cant-create-generic-array-types-in-java#:~:text=It%20is%20because%20generics%20were,in%20the%20making%20of%20it.
 
     public UTcollection() {
         this.body = new ArrayList<T>();
+        
     }
+    
     public UTcollection(ArrayList<T> prequel) {
         this.body = prequel;
     }
@@ -19,7 +25,14 @@ implements UTCinterface<T>
     }
     @Override
     public void unlink(Integer index) {
-            this.body.remove(index);
+        ArrayList<T> temp = new ArrayList<>();
+        for (int i = 0; i < index; i++) {
+            temp.add(this.body.get(i));
+        }
+        for (int i = index+1; i < this.body.size(); i++) {
+            temp.add(this.body.get(i));
+        }
+        this.body = temp;
         }
     @Override
     public void purge(T unit) {
@@ -141,11 +154,11 @@ implements UTCinterface<T>
     }
     @Override
     public Integer size() {
-        return this.body.size();
+        return this.len;
     }
     @Override
     public void getSet(Integer index) {
-        this.get(index);
+        System.out.println(this.get(index));
     }
     @Override
     public void getSet(Integer index, T unit) {
@@ -160,5 +173,15 @@ implements UTCinterface<T>
         }
         out.append("}");
         return out.toString();
+    }
+    @Override
+    public Integer getIndex(T obj) {
+        int out = -1;
+        for (int i = 0; i < this.body.size(); i++) {
+            if (this.body.get(i) == obj){
+            out = i;
+            break;}
+        }
+        return out;
     }
 }
