@@ -20,7 +20,11 @@ class Car():
                 "fuel": self._fuel, 
                 "to": self._techInspection, 
                 "str": self._assurance, "mtr": self._metrology}
-    
+    def get_sqlite(self):
+        return [self._model.value, self._color.value, self._prodYear,
+                self._fuel.value, self._techInspection,self._assurance,
+                self._metrology,self._govPL]
+    # "MODEL, COLOR, PROD_YEAR, FUEL, TECHREVIEW, ASSURANCE  METROLOGY, GOVPL"
     def set_to(self,arg:date) -> None:
         self._techInspection = arg
 

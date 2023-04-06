@@ -1,3 +1,5 @@
+from car import Car
+from driver import Driver
 
 class Printer():
 
@@ -6,6 +8,6 @@ class Printer():
             cls.instance = super(Printer, cls).__new__(cls)
         return cls.instance
     
-    def do(self,parsed:list[dict[car,driver]]):
+    def do(cls,parsed:list[str,dict[Car,Driver]]):
         raise NotImplementedError("beyond the scope")
-    
+
