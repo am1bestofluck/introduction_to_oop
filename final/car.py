@@ -1,7 +1,10 @@
 from datetime import date
-from carSpecs import CarModel,CarColor,Fuel
 
-class Car():
+
+from carSpecs import CarModel,CarColor,Fuel
+from interface import Sql_able
+
+class Car(Sql_able):
     
     def __init__(self, model: CarModel,color:CarColor,prodYear:date,fuel:Fuel
                  , date_rw:date, date_as:date, date_mtr:date,
@@ -19,7 +22,8 @@ class Car():
         return {"model":self._model, "color":self._color, "prYear":self._prodYear,
                 "fuel": self._fuel, 
                 "to": self._techInspection, 
-                "str": self._assurance, "mtr": self._metrology}
+                "str": self._assurance, "mtr": self._metrology,
+                "govPl":self._govPL}
     def get_sqlite(self):
         return [self._model.value, self._color.value, self._prodYear,
                 self._fuel.value, self._techInspection,self._assurance,

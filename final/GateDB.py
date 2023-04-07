@@ -7,34 +7,39 @@ import sqlite3
 
 from car import Car
 from carSpecs import CarModel, CarColor, Fuel
+from container_wb import Container_wb
 from driver import Driver
 from person import Person
 
 class GateDB():
     __SOURCE = "./db/db_taxi.sql"
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(GateDB, cls).__new__(cls)
         return cls.instance
     
-    def createNewWB(self, string_to_parse: str) -> list[Driver]:
+    def createNewWB(self, string_to_parse: str) -> Container_wb:
         
         raise NotImplementedError # TODO
     
     def returnWB(string_to_parse: str) -> None:
         raise NotImplementedError # TODO
     
-    def addDriver(ppl: Person, 
-                  doc1:date) -> None:
-        return # TODO
+    def addDriver(driver:Driver) -> None:
+        raise NotImplementedError("TODO")
     
-    def addPerson(name: str, surname: str, bday: date, code: str):
-        return # TODO
+    def addPerson(prs:Person) -> None:
+        raise NotImplementedError("TODO")
+
+    def getPerson(*args) -> Person:
+        raise NotImplementedError("TODO")
+
     def addAuto( govPlateNumb: str, model: CarModel, factoryYear:date):
-        return # TODO
+        raise NotImplementedError("TODO")
     
     def getAuto(govpl: str) -> Car:
-        return # TODO
+        raise NotImplementedError("TODO")
     
     def __PURGE(cls, debug:bool=True) -> None:
         if Path(cls.__SOURCE).exists():
@@ -92,25 +97,25 @@ class GateDB():
                     , ");"]).strip(sepr))
         base.commit()
         base.close()
-    
-    def reinit(cls):
+
+    def reinit(cls) -> None:
         cls.__PURGE()
         cls.__DEFAULT_FILL()
 
-    def __DEFAULT_FILL(self):
+    def __DEFAULT_FILL(self) -> None:
         base = sqlite3.connect(self.__SOURCE)
         crs = base.cursor()
         persons=[
-            ["JOHN", "DOE", None, date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),1],
-            ["SMITH", "WESSON", None, date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),1],
-            ["LUCY ", "WRY", None, date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),0],
-            ["PIT", "SNAKE", None, date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),1],
-            ["JANE", "STONE", None, date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),0]
+            Person("JOHN", "DOE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
+            Person("SMITH", "WESSON", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
+            Person("LUCY ", "WRY", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False),
+            Person("PIT", "SNAKE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
+            Person("JANE", "STONE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False)
             ]
-        for fullname in persons:
-            fullname[2] = " ".join([fullname[0],fullname[1]])
-        print()
-        crs.executemany("INSERT INTO persons(NAME, SURNAME, FULLNAME, BDAY, SEX) VALUES(?,?,?,?,?)",[i for i in persons])
+        # for fullname in persons:
+        #     fullname[2] = " ".join([fullname[0],fullname[1]])
+        crs.executemany("INSERT INTO persons(NAME, SURNAME, FULLNAME, BDAY, SEX) VALUES(?,?,?,?,?)",[i.get_sqlite() for i in persons])
+        
         cars = [
             Car( CarModel.prius20, CarColor.b , date(choice(range(2008,2018,1)),1,1)
                 , Fuel.bm,date.today()-timedelta(days=choice(range(180)))
@@ -138,16 +143,23 @@ class GateDB():
                , date.today()-timedelta(days=choice(range(365)))
                , "QXV 768")
         ]
+        
         crs.executemany("INSERT INTO cars"
                         +" (MODEL, COLOR, PROD_YEAR, FUEL, TECHREVIEW, ASSURANCE"
                         + ", METROLOGY, GOVPL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
                         [car_.get_sqlite() for car_ in cars])
+        
+        crs.executemany("INSERT INTO new_wbs(NUMBER) VALUES(?)",
+                        [(num,) for num in list(range(23000000,23000000+1000))])
+        # хочу выразить признательность стаковерфлоу за подсказку по синтаксису!
+
+
         base.commit()
         base.close()
-
-def main():
+        
+def dbg():
     a = GateDB()
     a.reinit()
     
 if __name__ =="__main__":
-    main()
+    dbg()

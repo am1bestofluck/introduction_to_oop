@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum,auto
 
 class CarModel(Enum):
     
@@ -10,7 +10,6 @@ class CarModel(Enum):
     logan = "Dacia Logan"
     corolla = "Toyota Corolla"
     zafira = "Opel Zafira"
-
 
 class CarColor(Enum):
     
@@ -25,9 +24,19 @@ class CarColor(Enum):
     rgb="multicolor"
 
 class Fuel(Enum):
+    
     benz="benzin"
     bm = "benzin/metan"
     bp = "benzin/propan"
     dt = "diesel"
     hb = "hibrid/benzin"
     el = "electro"
+
+class Relation(Enum):
+
+    rent_add = auto()
+    rent_stop =auto()
+    proprietary_add = auto()
+    property_stop = auto()
+    lease_add = auto()
+    lease_stop = auto()
