@@ -7,3 +7,7 @@ class Sql_able(ABC):
 
     def get(self) -> dict:
         pass
+    
+    def __str__(self) ->str:
+        pass
+     

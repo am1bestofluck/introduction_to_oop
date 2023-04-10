@@ -1,6 +1,7 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from pathlib import Path
-from random import choice
+from random import choice, choices
+from string import digits
 from os import unlink
 
 import sqlite3
@@ -10,10 +11,10 @@ from carSpecs import CarModel, CarColor, Fuel
 from container_wb import Container_wb
 from driver import Driver
 from person import Person
+from pathL import PAthDB
 
 class GateDB():
-    __SOURCE = "./db/db_taxi.sql"
-
+    __SOURCE = PAthDB.getPathDB()
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(GateDB, cls).__new__(cls)
@@ -29,15 +30,40 @@ class GateDB():
     def addDriver(driver:Driver) -> None:
         raise NotImplementedError("TODO")
     
-    def addPerson(prs:Person) -> None:
-        raise NotImplementedError("TODO")
+    def addPerson(self,**persons:Person) -> None:
+        base = sqlite3.connect(self.__SOURCE)
+        crs = base.cursor()
+        crs.executemany("INSERT INTO persons(NAME, SURNAME, FULLNAME, BDAY, SEX, PERSCODE) VALUES(?,?,?,?,?,?)",[i.get_sqlite() for i in persons])
+        base.commit()
+        base.close()
 
-    def getPerson(*args) -> Person:
-        raise NotImplementedError("TODO")
+    def getPerson(self, name:str, surname: str) -> Person:
+        fullname = " ".join([name.upper(),surname.upper()])
+        
+        base = sqlite3.connect(self.__SOURCE)   
+        crs = base.cursor()
+        
+        crs.execute(f"SELECT * FROM persons WHERE FULLNAME='{fullname}'")
+        pbase= crs.fetchall()
+        if len(pbase) >1:
+            raise NotImplementedError("filter? idno?")
+        base.close()
+        return Person( name=pbase[0][1], surname=pbase[0][2],
+                      bday=datetime.strptime(pbase[0][4],"%Y-%m-%d").date(),
+                      sex=pbase[0][5],perscode=pbase[0][6])
 
-    def addAuto( govPlateNumb: str, model: CarModel, factoryYear:date):
-        raise NotImplementedError("TODO")
-    
+    def addAuto(self, **cars:Car):
+        # raise NotImplementedError("TODO")
+        base = sqlite3.connect(self.__SOURCE)   
+        crs = base.cursor()
+        crs.executemany("INSERT INTO cars"
+                        +" (MODEL, COLOR, PROD_YEAR, FUEL, TECHREVIEW, ASSURANCE"
+                        + ", METROLOGY, GOVPL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                        [car_.get_sqlite() for car_ in cars])
+        crs.commit()
+        crs.close()
+
+
     def getAuto(govpl: str) -> Car:
         raise NotImplementedError("TODO")
     
@@ -64,7 +90,8 @@ class GateDB():
                     , "SURNAME varchar(50) NOT NULL,"
                     , "FULLNAME varchar (100) NOT NULL,"
                     , "BDAY DATE NOT NULL," # DATE - format YYYY-MM-DD
-                    , "SEX int" #0f 1m
+                    , "SEX int," #0f 1m
+                    , "PERSCODE varchar(13) UNIQUE"
                     , ");"]).strip(sepr))
         
         crs.execute(sepr.join(["CREATE TABLE cars ("
@@ -80,8 +107,8 @@ class GateDB():
                     , ");"]).strip(sepr))
         crs. execute(sepr.join(["CREATE TABLE drivers ("
                     , "ID integer primary key AUTOINCREMENT,"
-                    , "PERSONID int"
                     , "DRIVEPERMIT_D DATE NOT NULL,"
+                    , "PERSONID int,"
                     , "FOREIGN KEY (PERSONID) REFERENCES persons(ID)"
                     , ");"]).strip(sepr))
         crs.execute(sepr.join(["CREATE TABLE journal ("
@@ -106,15 +133,15 @@ class GateDB():
         base = sqlite3.connect(self.__SOURCE)
         crs = base.cursor()
         persons=[
-            Person("JOHN", "DOE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
-            Person("SMITH", "WESSON", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
-            Person("LUCY ", "WRY", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False),
-            Person("PIT", "SNAKE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True),
-            Person("JANE", "STONE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False)
+            Person("JOHN", "DOE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True,'1231231231231'),
+            Person("SMITH", "WESSON", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True, ''.join(choices(digits,k=13))),
+            Person("LUCY ", "WRY", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False, ''.join(choices(digits,k=13))),
+            Person("PIT", "SNAKE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),True, ''.join(choices(digits,k=13))),
+            Person("JANE", "STONE", date(choice(range(1950,2004,1)),choice(range(1,13)),choice(range(1,28))),False, ''.join(choices(digits,k=13)))
             ]
         # for fullname in persons:
         #     fullname[2] = " ".join([fullname[0],fullname[1]])
-        crs.executemany("INSERT INTO persons(NAME, SURNAME, FULLNAME, BDAY, SEX) VALUES(?,?,?,?,?)",[i.get_sqlite() for i in persons])
+        crs.executemany("INSERT INTO persons(NAME, SURNAME, FULLNAME, BDAY, SEX, PERSCODE) VALUES(?,?,?,?,?,?)",[i.get_sqlite() for i in persons])
         
         cars = [
             Car( CarModel.prius20, CarColor.b , date(choice(range(2008,2018,1)),1,1)
@@ -151,15 +178,40 @@ class GateDB():
         
         crs.executemany("INSERT INTO new_wbs(NUMBER) VALUES(?)",
                         [(num,) for num in list(range(23000000,23000000+1000))])
+        crs.execute("SELECT ID FROM persons")
+        codes = crs.fetchall()
+        sortedlist,dates=[],[]
+        for i in codes:
+            sortedlist.append(i[0])
+        sortedlist.sort()
+        for i in sortedlist:
+            crs.execute(f"SELECT BDAY FROM persons where ID={i}")
+            tmp = crs.fetchone()
+            dates.append(datetime.strptime(tmp[0],"%Y-%m-%d").date()+timedelta(weeks=16*4*12))
+        pair_permit_code = []
+        for i in range(len(sortedlist)):
+            pair_permit_code.append((dates[i],sortedlist[i]))
+        crs.executemany("INSERT INTO drivers(DRIVEPERMIT_D, PERSONID) VALUES(?, ?)",[i for i in pair_permit_code])
         # хочу выразить признательность стаковерфлоу за подсказку по синтаксису!
 
 
         base.commit()
         base.close()
+
+    # def grab_person() -> object:
         
+        
+    def grab_driver(self, name:str, surname: str) ->object:
+        fullname = " ".join([name.upper(),surname.upper()])
+        base = sqlite3.connect(self.__SOURCE)   
+        crs = base.cursor()
+        crs.execute(f"SELECT * FROM persons WHERE FULLNAME='{fullname}'")
+
 def dbg():
     a = GateDB()
     a.reinit()
+    q=a.grab_person("JOHN","DOE")
+    print(q)
     
 if __name__ =="__main__":
     dbg()

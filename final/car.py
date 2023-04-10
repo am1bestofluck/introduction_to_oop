@@ -24,7 +24,7 @@ class Car(Sql_able):
                 "to": self._techInspection, 
                 "str": self._assurance, "mtr": self._metrology,
                 "govPl":self._govPL}
-    def get_sqlite(self):
+    def get_sqlite(self) -> list[any]:
         return [self._model.value, self._color.value, self._prodYear,
                 self._fuel.value, self._techInspection,self._assurance,
                 self._metrology,self._govPL]
@@ -37,3 +37,6 @@ class Car(Sql_able):
 
     def set_mtr(self,arg:date) -> None:
         self._metrology = arg
+
+    def __str__(self) -> str:
+        return f"Car {self._model} {self._govPL}."

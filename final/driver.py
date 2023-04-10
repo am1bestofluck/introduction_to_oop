@@ -20,7 +20,12 @@ class Driver(Person):
         out = super().get_sqlite()
         out.append(self._permitDate)
         return out
+    
+    def __str__(self) -> str:
+        return f"Driver {super().get()['name']} {super().get()['surname']}."
+
 def dbg():
-    a = Driver(Person("a","b",date(1,2,3),True),date(1,1,1))
+    a = Driver(Person("a","b",date(1,2,3),True),date(1,1,1),"1231231231232")
     print(a.get())
     print(a.get_sqlite())
+    print(a)
