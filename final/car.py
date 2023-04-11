@@ -39,4 +39,4 @@ class Car(Sql_able):
         self._metrology = arg
 
     def __str__(self) -> str:
-        return f"Car {self._model} {self._govPL}."
+        return f"Car {self._model.value} {self._govPL}."
