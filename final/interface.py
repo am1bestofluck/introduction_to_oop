@@ -14,9 +14,9 @@ class Sql_able(ABC):
     def __str__(self) ->str:
         pass
 
-    @abstractclassmethod
-    def keyboard_init(cls) -> any:
-        pass
+    # @abstractclassmethod
+    # def keyboard_init(cls) -> any:
+    #     pass
 
 
 class Property(ABC):

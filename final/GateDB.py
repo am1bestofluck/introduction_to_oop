@@ -17,6 +17,7 @@ class GateDB():
 
     __SOURCE = PAthDB.getPathDB()
     __patternDate="%Y-%m-%d"
+    
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(GateDB, cls).__new__(cls)
@@ -29,8 +30,18 @@ class GateDB():
     def returnWB(self, string_to_parse: str) -> None:
         raise NotImplementedError # TODO
     
-    def addDriver(self, driver:Driver) -> None:
-        raise NotImplementedError("TODO")    
+    def addDriver(self, **drivers:Driver) -> None:
+        
+        base = sqlite3.connect(self.__SOURCE)   
+        crs = base.cursor()
+        for driver in drivers:
+            fullName= " ".join([driver.get()["name"], driver.get()["surname"]])
+            crs.execute(f"SELECT ID FROM persons WHERE FULLNAME='{fullName}'")
+            code = crs.fetchone()
+            buffer = (driver.get()["permitDate"],code)
+            crs.execute("INSERT INTO drivers(DRIVEPERMIT_D, PERSONID) VALUES(?, ?)", buffer)
+        base.commit()
+        base.close()
 
     def getDriver(self, name:str, surname:str) -> Driver:
         fullname = " ".join([name.upper(),surname.upper()])
@@ -73,14 +84,14 @@ class GateDB():
                     bday=datetime.strptime(pbase[0][4],self.__patternDate).date(),
                       sex=pbase[0][5],perscode=pbase[0][6])
 
-    def addAuto(self, **cars:Car):
+    def addAuto(self, *args:Car):
         # raise NotImplementedError("TODO")
         base = sqlite3.connect(self.__SOURCE)   
         crs = base.cursor()
         crs.executemany("INSERT INTO cars"
                         +" (MODEL, COLOR, PROD_YEAR, FUEL, TECHREVIEW, ASSURANCE"
                         + ", METROLOGY, GOVPL) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-                        [car_.get_sqlite() for car_ in cars])
+                        [car_.get_sqlite() for car_ in args])
         base.commit()
         base.close()
 
@@ -233,10 +244,9 @@ class GateDB():
 
 def dbg():
     a = GateDB()
-    q = a.getPerson("John", "Doe")
-    w= a.getPerson( "no", "such")
-    print(q)
-    print(w)
-    e = a.getDriver("pit","snake")
+    a.reinit()
+    testCar=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 777")
+    testCar2=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 888")
+    a.addAuto(testCar,testCar2)
 if __name__ =="__main__":
     dbg()

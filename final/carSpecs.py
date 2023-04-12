@@ -1,13 +1,16 @@
-from enum import Enum,auto
+from enum import Enum,auto, EnumMeta
 
 # from abc import ABCMeta
-# from interface import Property 
+from interface import Property 
 
 # class MetaCarModel(type(Enum),type(Property)):
 #     pass
 
 # пробовал делать интерфейс для этих классов но метакласс ломает enum =\
 # а без метакласса не парсится
+
+# class CarModelMeta(Enum, type(Property)):
+#     pass
 
 class CarModel(Enum):
 
