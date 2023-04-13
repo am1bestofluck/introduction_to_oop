@@ -13,6 +13,10 @@ from interface import Property
 #     pass
 
 class CarModel(Enum):
+    
+    @classmethod
+    def __doc__(cls):
+        return "Car Model"
 
     prius20 = "Toyota Prius 20"
     prius30 = "Toyota Prius 30"
@@ -31,9 +35,17 @@ class CarModel(Enum):
             if i.value == read:
                 return i
         raise ValueError("откуда такая машина в базе?")
-
+    
+    @classmethod
+    def inputHint(cls):
+        return f"Possible args for {cls.__doc__()}: ["+", ".join([i.value for  i in cls])+"]"
+    
 
 class CarColor(Enum):
+
+    @classmethod
+    def __doc__(cls):
+        return "Car Color"
     
     k="red"
     o="orange"
@@ -53,9 +65,16 @@ class CarColor(Enum):
             if i.value == read:
                 return i
         raise ValueError("откуда такой цвет в базе?")
-
+    
+    @classmethod
+    def inputHint(cls):
+        return f"Possible args for {cls.__doc__()}: ["+", ".join([i.value for i in cls])+"]"
 
 class Fuel(Enum):
+    
+    @classmethod
+    def __doc__(cls):
+        return "Car Fuel"
     
     benz="benzin"
     bm = "benzin/metan"
@@ -72,9 +91,16 @@ class Fuel(Enum):
                 return i
         raise ValueError("откуда такое топливо в базе?")
     
+    @classmethod
+    def inputHint(cls):
+        return f"Possible args for {cls.__doc__()}: ["+", ".join([i.value for  i in cls])+"]"
 
 class Relation(Enum):
 
+    @classmethod
+    def __doc__(cls):
+        return "Relation model"
+    
     rent_add = auto()
     rent_stop =auto()
     proprietary_add = auto()
@@ -85,12 +111,20 @@ class Relation(Enum):
     def parse() -> Enum | None:
         raise NotImplementedError("#beyond the scope")
     
+    @classmethod
+    def inputHint(cls):
+        return f"Possible args for {cls.__doc__()}: ["+", ".join([i for  i in dir(cls) if not i.startswith('__')])+"]"
+
 def dbg():
     modl = CarModel.parse("Opel Zafira")
     print(modl)
     clr = CarColor.parse("multicolor")
     print(clr)
     f = Fuel.parse("electro")
+    print(CarModel.inputHint())
+    print(CarColor.inputHint())
+    print(Fuel.inputHint())
+    
     print(f)
     
 if __name__ == "__main__": dbg()

@@ -1,5 +1,6 @@
 import re
-
+from gateDB import GateDB
+from Printer import Printer
 class Controller():
 
     __regex_relwb_r = re.compile(r'^(relwb) [a-zA-Z]+ [0-9]+ [a-zA-Z\-]+ [a-zA-Z\-]+ [0-9]+$',re.IGNORECASE)
@@ -17,12 +18,18 @@ class Controller():
         print("rwb {#number traverse} - возвращает путёвки")
 
     def repl(self,prompt:str):
+        base = GateDB()
         while True:
             readline = input(prompt)
             if self.__regex_relwb_r.match(readline):
-                print('routine') #TODO
+                kit = base.createNewWB(readline)
+                wbs = kit.unzip()
+                Printer.print_wayBills(wbs)
+                print("exception?")
+                
             elif self.__regex_relwb_c.match(readline):
-                print('custom dates') #TODO
+                kit=base.createNewWB(string_to_parse=readline,routine=False)
+                Printer.print_wayBills(kit)
             elif self.__regex_retwb.match(readline):
                 print('return wbs') #TODO
             else: 

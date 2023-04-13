@@ -23,9 +23,23 @@ class GateDB():
             cls.instance = super(GateDB, cls).__new__(cls)
         return cls.instance
     
-    def createNewWB(self, string_to_parse: str) -> Container_wb:
+    def createNewWB(self, string_to_parse: str,routine:bool=True) -> Container_wb:
+        args=string_to_parse[6:]
+        driver_o= self.getDriver(args.split(' ')[2],args.split(' ')[3])
+        car_o = self.getAuto(' '.join([args.split(' ')[0],args.split(' ')[1]]).upper()) 
+        qua = int(args.split(' ')[4]) if routine else int(input("Сколько путевых листов?"))
+        dates = []
         
-        raise NotImplementedError # TODO
+        if routine:
+            walk = date.today()
+            for i in range(qua):
+                dates.append(walk)
+                walk = walk + timedelta(days=1)
+        else:
+            for i in range(qua):
+                dates.append(datetime.strptime(input(f"input waybill date, format {self.__patternDate}"),self.__patternDate).date())
+        out = Container_wb(car_o,driver_o,dates)
+        return out
     
     def returnWB(self, string_to_parse: str) -> None:
         raise NotImplementedError # TODO
@@ -240,13 +254,19 @@ class GateDB():
         base.commit()
         base.close()
 
+    def popWBN(qua:int) -> None:
+        return
+    
+    def addWBN(numbers:range) ->None:
+        return
 
 
 def dbg():
-    a = GateDB()
-    a.reinit()
-    testCar=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 777")
-    testCar2=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 888")
-    a.addAuto(testCar,testCar2)
+    # a = GateDB()
+    # a.reinit()
+    # testCar=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 777")
+    # testCar2=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 888")
+    # a.addAuto(testCar,testCar2,Car())
+    pass
 if __name__ =="__main__":
     dbg()
