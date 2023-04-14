@@ -1,6 +1,10 @@
 import re
+
+
 from gateDB import GateDB
 from Printer import Printer
+
+
 class Controller():
 
     __regex_relwb_r = re.compile(r'^(relwb) [a-zA-Z]+ [0-9]+ [a-zA-Z\-]+ [a-zA-Z\-]+ [0-9]+$',re.IGNORECASE)
@@ -29,7 +33,9 @@ class Controller():
                 
             elif self.__regex_relwb_c.match(readline):
                 kit=base.createNewWB(string_to_parse=readline,routine=False)
-                Printer.print_wayBills(kit)
+                wbs = kit.unzip()
+                Printer.print_wayBills(wbs)
+                print("exception?")
             elif self.__regex_retwb.match(readline):
                 print('return wbs') #TODO
             else: 

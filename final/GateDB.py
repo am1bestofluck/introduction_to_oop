@@ -8,10 +8,20 @@ import sqlite3
 
 from car import Car
 from carSpecs import CarModel, CarColor, Fuel
-from container_wb import Container_wb
+try:
+    from container_wb import Container_wb
+except ImportError:
+    pass # ...
+try:
+    from waybill import Waybill
+except ImportError:
+    pass
+
 from driver import Driver
 from person import Person
 from pathL import PAthDB
+
+
 
 class GateDB():
 
@@ -23,13 +33,14 @@ class GateDB():
             cls.instance = super(GateDB, cls).__new__(cls)
         return cls.instance
     
-    def createNewWB(self, string_to_parse: str,routine:bool=True) -> Container_wb:
+    def createNewWB(self, string_to_parse: str,routine:bool=True) -> "Container_wb":
         args=string_to_parse[6:]
         driver_o= self.getDriver(args.split(' ')[2],args.split(' ')[3])
         car_o = self.getAuto(' '.join([args.split(' ')[0],args.split(' ')[1]]).upper()) 
         qua = int(args.split(' ')[4]) if routine else int(input("Сколько путевых листов?"))
         dates = []
-        
+        legit = choice((True,False))# на будущее
+        wbnumbers = self.giveNumberWB(qua=qua, strikeThrough=legit)
         if routine:
             walk = date.today()
             for i in range(qua):
@@ -38,7 +49,7 @@ class GateDB():
         else:
             for i in range(qua):
                 dates.append(datetime.strptime(input(f"input waybill date, format {self.__patternDate}"),self.__patternDate).date())
-        out = Container_wb(car_o,driver_o,dates)
+        out = Container_wb(car_o,driver_o,dates,wbnumbers)
         return out
     
     def returnWB(self, string_to_parse: str) -> None:
@@ -125,6 +136,32 @@ class GateDB():
         base.close()
         return Car(model,color,prodYear,fuel,date_rw,date_as,date_mtr,govpl)
 
+    def addNumberWB(self, rangeNums:range) -> None:
+        base = sqlite3.connect(self.__SOURCE)
+        crs = base.cursor()
+        crs.executemany("INSERT INTO new_wbs(NUMBER) VALUES(?)",
+                        [(num,) for num in list(rangeNums)])
+        base.commit()
+        base.close()
+    
+    def giveNumberWB(self, qua:int, strikeThrough:bool=False) -> list[int]:
+        base = sqlite3.connect(self.__SOURCE)
+        crs = base.cursor()
+        crs.execute(f"SELECT NUMBER FROM new_wbs WHERE USED IS NULL")
+        nums = crs.fetchmany(qua)
+        if strikeThrough:
+            print("добавляем еденичку в USED")
+            crs.executemany("UPDATE new_wbs SET USED=1 WHERE NUMBER=(?)",[num for num in nums])
+            
+        else:
+            print("переносим в конец списка")
+            crs.executemany("DELETE FROM new_wbs WHERE NUMBER=(?)",[num for num in nums])
+            crs.executemany("INSERT INTO new_wbs(NUMBER) VALUES(?)", [num for num in nums])
+
+        base.commit()
+        base.close()
+        return nums
+
     def __PURGE(cls, debug:bool=True) -> None:
         if Path(cls.__SOURCE).exists():
             if debug:
@@ -140,7 +177,8 @@ class GateDB():
         sepr=" "
         crs.execute(sepr.join(["CREATE TABLE new_wbs ("
                     , "ID integer primary key AUTOINCREMENT,"
-                    ,  "NUMBER int NOT NULL"
+                    ,  "NUMBER int NOT NULL UNIQUE,"
+                    , "USED int"
                     ,  ");"]).strip(sepr))
         crs.execute(sepr.join(["CREATE TABLE persons ("
                     ,"ID integer primary key AUTOINCREMENT,"
@@ -172,6 +210,7 @@ class GateDB():
         crs.execute(sepr.join(["CREATE TABLE journal ("
                     ,"ID integer primary key AUTOINCREMENT,"
                     , "RELDATE DATE NOT NULL,"
+                    , "SHIFTDATE DATE,"
                     , "WBNUM int,"
                     , "AUTO int,"
                     , "DRIVER int,"
@@ -253,20 +292,55 @@ class GateDB():
         # хочу выразить признательность стаковерфлоу за подсказку по синтаксису!
         base.commit()
         base.close()
-
-    def popWBN(qua:int) -> None:
-        return
     
-    def addWBN(numbers:range) ->None:
-        return
+    def journal_extract(self,date_after:date=None, date_till: date=None, 
+                        car:Car = None, driver:Driver = None):
+        date_till_m = date(2999,12,12) if date_till is None else date_till
+        date_after_m = date(1,1,1) if date_after is None else date_after
+        base = sqlite3.connect(self.__SOURCE)
+        crs = base.cursor()
+        
+        idCar = "ALL"
+        idDriver = "ALL"
+        if car is not None:
+            crs.execute(f"""SELECT ID FROM cars WHERE GOVPL='{car.get()["govPl"]}'""")
+            idCar=crs.fetchone()
+        if driver is not None:
+            fullName= " ".join([driver.get()['name'],driver.get()['surname']])
+            crs.execute(f"SELECT ID FROM persons WHERE FULLNAME='{fullName}'")
+            personId=crs.fetchone()
+            idDriver = crs.execute(f"SELECT ID FROM drivers WHERE PERSONID={personId}")
 
+        operator = f"SELECT * FROM journal WHERE AUTO ={idCar} AND DRIVER={idDriver} "\
+        + f"AND SHIFTDATE BETWEEN #{date_till_m:%m/%d/%Y}# AND #{date_after_m:%m/%d/%Y}#"
+        crs.execute(operator)
+        out= crs.fetchall()
+        base.close()
+        return out
+
+    def journal_log(self,wbs:list['Waybill']):
+        base = sqlite3.connect(self.__SOURCE)
+        crs = base.cursor()
+        crs.executemany("INSERT INTO( RELDATE, SHIFTDATE, WBNUM, AUTO, DRIVER) journal()",[i.get_sqlite()[:-2] for i in wbs])
+        base.commit()
+        base.close()
+
+
+    def journal_return(self):
+        pass
 
 def dbg():
-    # a = GateDB()
-    # a.reinit()
-    # testCar=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 777")
-    # testCar2=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 888")
-    # a.addAuto(testCar,testCar2,Car())
+    a = GateDB()
+    a.reinit()
+    testCar=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 777")
+    testCar2=Car(model=CarModel.focus,color=CarColor.rgb,prodYear=date(2023,1,1),fuel=Fuel.benz,date_rw=date(2023,2,2),date_as=date(2022,12,12),date_mtr=date(2023,3,3),govpl="ADD 888")
+    a.addAuto(testCar,testCar2,Car())
+    st=15000000
+    a.addNumberWB(range(st,st+1000))
+    # grey = a.giveNumberWB(10)
+    # white = a.giveNumberWB(10,True)
+    # print(grey)
+    # print(white)
     pass
 if __name__ =="__main__":
     dbg()
